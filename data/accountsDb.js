@@ -4,7 +4,7 @@ module.exports = {
   get,
   getById,
   insert,
-  update,
+  crudUpdate,
   remove,
 };
 
@@ -24,7 +24,7 @@ function insert(account) {
    
 }
 
-function update(id, changes) {
+function crudUpdate(id, changes) {
   return db('accounts')
     .where({ id })
     .update(changes);

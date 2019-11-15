@@ -25,18 +25,42 @@ server.get('/:id', async (req, res) => {
   }
 });
 
-server.post('/', (req, res) => {
- try{
+server.post('/', async (req, res) => {
+  try {
+    const newAccount = req.body;
+    const accountAdded = await Accounts.insert(newAccount);
 
-const newAccount = req.body;
+    res.status(200).json(accountAdded);
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Server didn't work =(" });
+  }
+});
 
-const accountAdded = await Accounts.insert(newAccount);
+server.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
 
-res.status(200).json(accountAdded);
+    const accountDeleted = await Accounts.remove(id);
 
- }catch (err){
-  res.status(500).json({ success: false, message: "Server didn't work =(" });
- }
+    res.status(200).json(accountDeleted);
+  } catch (err) {
+    console.log("Server didn't like it.");
+    res.status(500).json(err);
+  }
+});
+
+server.put('/:id', async (req, res) => {
+  try {
+    const updateId = req.params.id;
+    const accountChange = await req.body;
+console.log(accountChange, "Account change")
+    const updatedAccount = await Accounts.crudUpdate(updateId, accountChange);
+console.log(updatedAccount,"updated account")
+    res.status(200).json(updatedAccount);
+  } catch (err) {
+    console.log("Server didn't like it.");
+    res.status(500).json(err);
+  }
 });
 
 module.exports = server;
